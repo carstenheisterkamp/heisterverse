@@ -1,9 +1,17 @@
-import './App.css'
 
-export default function App() {
+import R3FCanvas from './components/Canvas';
+import Navbar from './components/Navbar'
+import Background from './components/Background';
+
+const App = () => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-  )
-}
+    <div className="relative">
+      <Background />
+      <R3FCanvas />
+      {/*   <Background /> */}
+      <Navbar />
+    </div>
+  );
+};
+
+export default App;
