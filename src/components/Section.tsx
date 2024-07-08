@@ -26,13 +26,13 @@ const Section: React.FC<SectionProps> = ({ title, content, image }) => {
     };
 
     const imageVariants = {
-        hidden: { opacity: 0, x: -50 },
-        visible: { opacity: 1, x: 0 },
+        hidden: { opacity: 0, y: 150 },
+        visible: { opacity: 1, y: 0 },
     };
 
     const textVariants = {
-        hidden: { opacity: 0, x: 50 },
-        visible: { opacity: 1, x: 0 },
+        hidden: { opacity: 0, y: 150 },
+        visible: { opacity: 1, y: 0 },
     };
 
     return (
@@ -48,7 +48,7 @@ const Section: React.FC<SectionProps> = ({ title, content, image }) => {
                 <motion.img
                     src={image}
                     alt={title}
-                    className="w-1/2"
+                    className="w-1/2 z-10"
                     variants={imageVariants}
                     transition={{ duration: 0.6 }}
                 />
