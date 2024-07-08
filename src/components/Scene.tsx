@@ -1,4 +1,4 @@
-import { OrbitControls, SoftShadows, Sphere } from "@react-three/drei"
+import { OrbitControls, SoftShadows } from "@react-three/drei"
 
 const Scene = () => {
     return (
