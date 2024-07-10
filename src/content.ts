@@ -1,6 +1,3 @@
-
-import * as Tone from 'tone';
-
 const sections = [
     {
         title: 'Section 1',
@@ -19,21 +16,14 @@ const sections = [
     },
 ];
 
-const playeroptions: Tone.PlayerOptions = {
-    onload: () => { },
-    onerror: () => { },
-    playbackRate: 1,
-    loop: false,
-    autostart: false,
-    loopStart: 0,
-    loopEnd: 0,
-    reverse: false,
-    fadeIn: 0,
-    fadeOut: 0,
-    volume: 1,
-    mute: true,
-    onstop: () => { },
-    context: Tone.getContext()
+const audiosettings = {
+    "baseurl": "./assets/audio/",
+    "audiofiles": {
+        "athmo": "athmo.mp3",
+        "click": "click.mp3",
+        "hover": "hover.mp3",
+    }
 }
 
-export { sections, playeroptions }
+
+export { sections, audiosettings }

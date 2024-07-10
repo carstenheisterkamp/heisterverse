@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="128px" viewBox="0 0 128 128" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>favicon</title>
+    <g id="favicon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#FFFFFF" x="0" y="0" width="128" height="128"></rect>
+        <g id="H" transform="translate(37, 30)" fill="#000000" fill-rule="nonzero">
+            <polygon id="Path" points="40.128 67.008 54.72 67.008 54.72 0 40.128 0 40.128 26.592 14.592 26.592 14.592 0 0 0 0 67.008 14.592 67.008 14.592 39.456 40.128 39.456"></polygon>
+        </g>
+    </g>
+</svg>
