@@ -16,14 +16,4 @@ const sections = [
     },
 ];
 
-const audiosettings = {
-    "baseurl": "./assets/audio/",
-    "audiofiles": {
-        "athmo": "athmo.mp3",
-        "click": "click.mp3",
-        "hover": "hover.mp3",
-    }
-}
-
-
-export { sections, audiosettings }
+export default sections;

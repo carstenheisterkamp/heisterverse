@@ -1,9 +1,18 @@
+import { Vector3, Euler } from 'three'
 import { OrbitControls, SoftShadows, Environment } from "@react-three/drei"
-import { Physics, RigidBody } from "@react-three/rapier"
+import { Physics } from "@react-three/rapier"
+import Pointer from './Pointer'
+/* import JoinedSystem from './JoinedSystem' */
+import WorldEnvironment from './Backdrop'
+import PhysicsObject from "./PhysicsObject";
+import { EffectComposer, DepthOfField, Noise, Vignette } from '@react-three/postprocessing'
 
 const Scene = () => {
     return (
         <>
+            <color attach="background" args={["#050505"]} />
+            <fog color="#161616" attach="fog" near={2} far={10} />
+
             <OrbitControls autoRotate autoRotateSpeed={0.5} />
             <SoftShadows size={60} focus={0.4} samples={15} />
             <ambientLight intensity={0.2} />
@@ -15,28 +24,16 @@ const Scene = () => {
                 </directionalLight>
             </group>
 
-            <Physics>
-                <RigidBody linearDamping={1.0} angularDamping={0.1} friction={0} >
-                    <mesh position={[0, 4, 0]} rotation={[45, 45, 45]} receiveShadow castShadow>
-                        <boxGeometry args={[1, 1, 1]} />
-                        <meshLambertMaterial color="white" />
-                    </mesh>
-                </RigidBody>
-
-                <RigidBody linearDamping={1.0} angularDamping={0.1} friction={0} >
-                    <mesh position={[0.6, 6.1, 0]} receiveShadow castShadow>
-                        <boxGeometry args={[0.5, 0.5, 0.5]} />
-                        <meshLambertMaterial color="white" />
-                    </mesh>
-                </RigidBody>
-
-                <RigidBody >
-                    <mesh position={[0, 0.1, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow castShadow >
-                        <planeGeometry args={[10, 10]} />
-                        <meshLambertMaterial color="white" />
-                    </mesh>
-                </RigidBody>
+            <Physics timeStep="vary" gravity={[0, -9, 0]}>
+                <PhysicsObject name={"yolo"} position={new Vector3(0, 2, 0)} rotation={new Euler(0, 0, 0)} size={[1, 1, 1]} />
+                <Pointer />
+                <WorldEnvironment />
             </Physics>
+            <EffectComposer multisampling={8}>
+                <DepthOfField target={[0, 0, 0]} focalLength={0.4} bokehScale={14} height={700} />
+                <Noise opacity={0.025} />
+                <Vignette eskil={false} offset={0.01} darkness={0.8} />
+            </EffectComposer>
         </>
     )
 }

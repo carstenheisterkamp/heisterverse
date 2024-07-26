@@ -1,15 +1,16 @@
-import Background from './components/Background';
 import R3FCanvas from './components/Canvas';
-import Content from './components/Content'
+/* import Content from './components/Content' */
 import Navbar from './components/Navbar';
+
+import MuteAudioButton from './components/buttons/MuteAudio'
 
 const App = () => {
   return (
     <div className="relative w-[100vw]">
-      <Background />
       <R3FCanvas />
-      <Content />
+      {/*       <Content /> */}
       <Navbar />
+      <MuteAudioButton />
     </div>
   );
 };

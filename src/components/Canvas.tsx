@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Canvas } from "@react-three/fiber"
-import Scene from "./Scene/Scene";
+import Scene from "./scene/Scene";
 
 const R3FCanvas = () => {
     return (
@@ -8,7 +8,7 @@ const R3FCanvas = () => {
             <Canvas
                 className="w-full h-full z-0"
                 shadows
-                camera={{ position: [-2, 2, -10], fov: 60 }}
+                camera={{ position: [-2, 2, -8], fov: 60 }}
             >
                 <Suspense fallback={null}>
                     <Scene />
