@@ -1,6 +1,6 @@
 import { StateCreator, create } from 'zustand'
 import { devtools } from 'zustand/middleware';
-import audiosettings from '../data/config.json'
+import { audiosettings } from '../data/config'
 
 const createAudioContext = () => {
     const audioContext = new (window.AudioContext || window.AudioContext)();
