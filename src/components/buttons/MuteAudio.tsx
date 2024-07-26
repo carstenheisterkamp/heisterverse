@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import React, { useRef, useEffect } from 'react';
-import { useAudioStore } from '../../stores/audioStore'
+import { useAudioStore } from '../../stores/audio'
 
 const MuteAudioButton: React.FC = () => {
     const audioStore = useAudioStore()
