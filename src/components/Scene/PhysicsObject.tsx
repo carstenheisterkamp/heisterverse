@@ -40,7 +40,7 @@ const PhysicsObject: React.FC<PhysicsObjectProps> = ({ name, position, rotation,
             onContactForce={handleContactForce}
         >
             <mesh name={name} position={position} rotation={rotation} onClick={handleClick} ref={meshRef} receiveShadow castShadow>
-                <boxGeometry args={size} />
+                <sphereGeometry args={size} />
                 <meshLambertMaterial color="white" />
             </mesh>
         </RigidBody>

@@ -5,13 +5,13 @@ import Pointer from './Pointer'
 /* import JoinedSystem from './JoinedSystem' */
 import WorldEnvironment from './Backdrop'
 import PhysicsObject from "./PhysicsObject";
-import { EffectComposer, DepthOfField, Noise, Vignette } from '@react-three/postprocessing'
+import { EffectComposer, DepthOfField, Noise, Vignette, Bloom } from '@react-three/postprocessing'
 
 const Scene = () => {
     return (
         <>
             <color attach="background" args={["#050505"]} />
-            <fog color="#161616" attach="fog" near={2} far={10} />
+            <fog color="#161616" attach="fog" near={0} far={15} />
 
             <OrbitControls autoRotate autoRotateSpeed={0.5} />
             <SoftShadows size={60} focus={0.4} samples={15} />
@@ -33,6 +33,7 @@ const Scene = () => {
                 <DepthOfField target={[0, 0, 0]} focalLength={0.4} bokehScale={14} height={700} />
                 <Noise opacity={0.025} />
                 <Vignette eskil={false} offset={0.01} darkness={0.8} />
+                <Bloom luminanceThreshold={0} luminanceSmoothing={0.9} height={700} opacity={3} />
             </EffectComposer>
         </>
     )
