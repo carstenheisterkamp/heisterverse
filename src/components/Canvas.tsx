@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { Canvas } from "@react-three/fiber"
+import { Canvas } from "@react-three/fiber";
 import Scene from "./scene/Scene";
 
 const R3FCanvas = () => {

@@ -26,6 +26,7 @@ const Scene = () => {
                 <PhysicsObject name={"yolo"} position={new Vector3(0, 2, 0)} rotation={new Euler(0, 0, 0)} size={[1, 1, 1]} />
                 <WorldEnvironment />
             </Physics>
+
             <EffectComposer multisampling={8}>
                 <DepthOfField target={[0, 0, 0]} focalLength={0.4} bokehScale={14} height={700} />
                 <Noise opacity={0.025} />
