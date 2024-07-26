@@ -11,7 +11,7 @@ interface PhysicsObjectProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const PhysicsObject: React.FC<PhysicsObjectProps> = ({ name, position, rotation, size, onClick }) => {
+const PhysicsObject: React.FC<PhysicsObjectProps> = ({ name, position, rotation, size }) => {
     const meshRef = useRef<Mesh>(null)
     const rigidBodyRef = useRef<RapierRigidBody>(null)
 

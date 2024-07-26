@@ -1,8 +1,6 @@
 import { Vector3, Euler } from 'three'
 import { OrbitControls, SoftShadows, Environment } from "@react-three/drei"
 import { Physics } from "@react-three/rapier"
-import Pointer from './Pointer'
-/* import JoinedSystem from './JoinedSystem' */
 import WorldEnvironment from './Backdrop'
 import PhysicsObject from "./PhysicsObject";
 import { EffectComposer, DepthOfField, Noise, Vignette, Bloom } from '@react-three/postprocessing'
@@ -26,7 +24,6 @@ const Scene = () => {
 
             <Physics timeStep="vary" gravity={[0, -9, 0]}>
                 <PhysicsObject name={"yolo"} position={new Vector3(0, 2, 0)} rotation={new Euler(0, 0, 0)} size={[1, 1, 1]} />
-                <Pointer />
                 <WorldEnvironment />
             </Physics>
             <EffectComposer multisampling={8}>
