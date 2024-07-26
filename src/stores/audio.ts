@@ -10,7 +10,6 @@ const createAudioContext = () => {
 
     return audioContext;
 };
-
 interface Sound {
     file: string;
     type: string;
@@ -19,7 +18,6 @@ interface Sound {
     start: number;
     length: number;
 }
-
 interface SoundWithAudioBuffer extends Sound {
     audioBuffer: AudioBuffer;
     source: AudioBufferSourceNode;
@@ -53,8 +51,8 @@ const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = 
     soundsPlaying: {},
     analyser: null,
     loadSounds: async () => {
-        const audiopath = audiosettings.audiopath
-        const sounds: Record<string, Sound> = audiosettings.audio
+        const audiopath = audiosettings.baseurl
+        const sounds: Record<string, Sound> = audiosettings.audioFiles
         const LoadedSounds: { [key: string]: SoundWithAudioBuffer } = {};
 
         await Promise.all(Object.keys(sounds).map(async (key) => {

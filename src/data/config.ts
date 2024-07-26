@@ -12,7 +12,7 @@ const models = {
 
 const audiosettings = {
     "baseurl": "./assets/audio/",
-    "audio":
+    "audioFiles":
     {
         "track_athmo": {
             "file": "trackAthmo.mp3",
@@ -46,15 +46,13 @@ const audiosettings = {
             "start": 26.0,
             "length": 11.494
         },
-        "audiofiles": {
-            "sndBeacon": {
-                "file": "spriteSoundFx.mp3",
-                "type": "ui",
-                "loop": true,
-                "volume": 0.5,
-                "start": 2.0,
-                "length": 0.5
-            }
+        "sndBeacon": {
+            "file": "spriteSoundFx.mp3",
+            "type": "ui",
+            "loop": true,
+            "volume": 0.5,
+            "start": 2.0,
+            "length": 0.5
         }
     }
 }

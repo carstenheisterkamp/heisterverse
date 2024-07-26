@@ -1,7 +1,10 @@
 /* eslint-disable @typescript-eslint/no-loss-of-precision */
 import React, { useRef, useEffect } from 'react';
+import { useAudioStore } from '../../stores/audioStore'
 
 const MuteAudioButton: React.FC = () => {
+    const audioStore = useAudioStore()
+
     const pathRef = useRef<SVGPathElement>(null);
     const m = 0.512286623256592433;
 
@@ -68,8 +71,16 @@ const MuteAudioButton: React.FC = () => {
         buildWave(64, 64); // Call the function with appropriate width and height
     }, []);
 
+    const muteAudio = () => {
+        try {
+            audioStore.muteAudio(1)
+        } catch {
+            console.log('Mute/Unmute audio failed. Presumely because audio muting/unmuting is already in progress.')
+        }
+    }
+
     return (
-        <div>
+        <div onClick={muteAudio}>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="64px"
