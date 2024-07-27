@@ -44,7 +44,7 @@ interface AudioStore {
 }
 
 const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = (set, get) => ({
-    isMuted: false,
+    isMuted: true,
     audioContext: createAudioContext(),
     masterGain: null,
     sounds: {},
@@ -74,6 +74,7 @@ const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = 
             get().createMasterGain();
         }))
         get().createAnalyser();
+        console.log('Sounds loaded:', LoadedSounds);
     },
 
     createMasterGain: () => {
@@ -207,9 +208,9 @@ const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = 
 
     },
     cleanup: () => {
-        // const { audioContext } = get();
-        // console.log('Cleaning up audio context', audioContext);
-        // audioContext.close();
+        const { audioContext } = get();
+        console.log('Cleaning up audio context', audioContext);
+        audioContext.close();
     }
 });
 

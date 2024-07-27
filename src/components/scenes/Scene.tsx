@@ -23,7 +23,7 @@ const Scene = () => {
             </group>
 
             <Physics timeStep="vary" gravity={[0, -9, 0]}>
-                <PhysicsObject name={"yolo"} position={new Vector3(0, 2, 0)} rotation={new Euler(0, 0, 0)} size={[1, 1, 1]} />
+                <PhysicsObject name={"yolo"} position={new Vector3(0, 2, 0)} rotation={new Euler(0, 0, 0)} size={[1, 16, 16]} />
                 <WorldEnvironment />
             </Physics>
 
