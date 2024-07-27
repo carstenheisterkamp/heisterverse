@@ -14,11 +14,14 @@ interface PhysicsObjectProps {
 const PhysicsObject: React.FC<PhysicsObjectProps> = ({ name, position, rotation, size }) => {
     const meshRef = useRef<Mesh>(null)
     const rigidBodyRef = useRef<RapierRigidBody>(null)
-    const { startSound, setPan } = useAudioStore();
+    const { startSound, setPan, getMasterGain, getSoundVolume, getSoundPanorama } = useAudioStore();
 
     const handleClick = () => {
         startSound("sndBeacon", false);
-        setPan("sndBeacon", -0.9);
+        setPan("sndBeacon", -1);
+        console.log("Master Gain Volume: ", getMasterGain());
+        console.log("Sound Volume:", getSoundVolume("sndBeacon"));
+        console.log("Sound Panorama:", getSoundPanorama("sndBeacon"));
     }
 
     const handleCollision = () => {

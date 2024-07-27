@@ -21,6 +21,7 @@ interface AudioStore {
     isMuted: boolean;
     audioContext: AudioContext | null;
     masterGain: GainNode | null,
+    masterVolume: number;
     sounds: Record<string, SoundWithAudioBuffer>;
     analyser: AnalyserNode | null;
     soundsPlaying: { [key: string]: boolean };
@@ -31,6 +32,10 @@ interface AudioStore {
     getFrequencyData: () => Uint8Array | null;
     setPan: (key: string, panValue: number) => void;
     set3DPosition: (key: string, x: number, y: number, z: number) => void;
+    getMasterGain: () => number | null;
+    getSoundVolume: (key: string) => number | null;
+    getSoundPanorama: (key: string) => number | null;
+    getSoundPosition: (key: string) => [number, number, number] | null;
     startSound: (key: string, analyse: boolean, pan?: number) => Promise<void>;
     stopSound: (key: string, fadeDuration: number) => Promise<void>;
     toggleMute: (fadeDuration: number) => Promise<void>;
@@ -41,6 +46,7 @@ const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = 
     isMuted: false,
     audioContext: null,
     masterGain: null,
+    masterVolume: 0.5,
     sounds: {},
     soundsPlaying: {},
     analyser: null,
@@ -110,22 +116,57 @@ const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = 
         set({ sounds: LoadedSounds }, false, 'SoundsLoaded');
         get().createMasterGain();
         get().createAnalyser();
-        console.log('Sounds loaded:', LoadedSounds);
+        console.info('Sounds loaded:', LoadedSounds);
     },
-
     createMasterGain: () => {
-        const { audioContext } = get();
+        const { audioContext, masterVolume } = get();
         const masterGain = audioContext!.createGain();
         masterGain.connect(audioContext!.destination);
+        masterGain.gain.value = masterVolume;
         set({ masterGain: masterGain }, false, 'createMasterGain');
+        console.info('Master gain node created', masterGain.gain.value);
     },
-
     createAnalyser: () => {
         const { audioContext } = get();
         const audioctx = audioContext!.createAnalyser();
         set({ analyser: audioctx }, false, 'createAnalyser');
+        console.info('Analyser node created');
     },
-
+    getSoundVolume: (key: string) => {
+        const { sounds } = get();
+        const sound = sounds[key];
+        if (sound && sound.gainNode) {
+            return sound.gainNode.gain.value;
+        }
+        console.warn(`Sound ${key} not found or has no gain node`);
+        return null;
+    },
+    getMasterGain: () => {
+        const { masterGain } = get();
+        if (masterGain) {
+            return masterGain.gain.value;
+        }
+        console.warn('Master gain node not found');
+        return null;
+    },
+    getSoundPanorama: (key: string) => {
+        const { sounds } = get();
+        const sound = sounds[key];
+        if (sound && sound.panner instanceof StereoPannerNode) {
+            return sound.panner.pan.value;
+        }
+        console.warn(`Sound ${key} not found or has no stereo panner`);
+        return null;
+    },
+    getSoundPosition: (key: string) => {
+        const { sounds } = get();
+        const sound = sounds[key];
+        if (sound && sound.panner instanceof PannerNode) {
+            return [sound.panner.positionX.value, sound.panner.positionY.value, sound.panner.positionZ.value];
+        }
+        console.warn(`Sound ${key} not found or has no panner`);
+        return null;
+    },
     getFrequencyData: () => {
         const { analyser } = get();
 
@@ -175,14 +216,22 @@ const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = 
                 reject("Audio is muted");
             } else if (sounds[key].loop === true && soundsPlaying[key]) {
                 reject(`Sound ${key} is LOOPED and already playing`);
-            }
-            else {
+            } else {
                 if (audioContext!.state === 'suspended') {
-                    console.log('AudioContext is suspended, resuming...')
-                    audioContext!.resume()
+                    console.log('AudioContext is suspended, resuming...');
+                    audioContext!.resume();
                 }
 
-                const sound = sounds[key]
+                const sound = sounds[key];
+
+                // Disconnect previous nodes if they exist
+                if (sound.source) {
+                    sound.source.disconnect();
+                }
+                if (sound.gainNode) {
+                    sound.gainNode.disconnect();
+                }
+
                 const source = audioContext!.createBufferSource();
                 const gainNode = audioContext!.createGain();
 
@@ -191,15 +240,15 @@ const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = 
                 source.loop = sound.loop;
                 source.buffer = sound.audioBuffer;
                 source.connect(gainNode);
-                gainNode.gain.value = sound.volume;
+                gainNode.gain.value = sound.volume;  // Ensure gain is set to the correct volume
 
                 if (analyse) {
                     if (!analyser) {
-                        console.error('No analyser found')
+                        console.error('No analyser found');
                         return;
                     } else {
                         gainNode.connect(analyser!);
-                        console.log('Connected to analyser')
+                        console.log('Connected to analyser');
                     }
                 }
 
@@ -216,24 +265,25 @@ const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = 
                     gainNode.connect(panner);
                     panner.connect(masterGain!);
                     set({ sounds: { ...sounds, [key]: { ...sounds[key], panner } } }, false, 'set panner');
-                    console.log('Connected to panner', panner)
+                    console.log('Connected to panner', panner);
                 } else {
                     const stereoPanner = audioContext.createStereoPanner();
-                    stereoPanner.pan.value = 0
+                    stereoPanner.pan.value = 0;
                     gainNode.connect(stereoPanner);
                     stereoPanner.connect(masterGain!);
                 }
 
                 source.onended = () => {
                     set({ soundsPlaying: { ...soundsPlaying, [key]: false } }, false, 'soundEnded');
-                }
+                };
 
                 set({ soundsPlaying: { ...soundsPlaying, [key]: true } }, false, 'startSound');
                 source.start(0, sound.start);
                 resolve();
             }
-        })
+        });
     },
+
     stopSound: async (key: string, fadeDuration: number) => {
         const { sounds, soundsPlaying, audioContext } = get();
         if (soundsPlaying[key]) {
@@ -244,42 +294,51 @@ const audioStore: StateCreator<AudioStore, [["zustand/devtools", never]], []> = 
 
             await new Promise(resolve => setTimeout(resolve, fadeDuration * 1000));
             sound.source.stop();
+            sound.source.disconnect();
+            sound.gainNode.disconnect();
+            if (sound.panner) sound.panner.disconnect();
             set({ soundsPlaying: { ...soundsPlaying, [key]: false } }, false, 'stopSound');
         }
     },
     toggleMute: async (fadeDuration: number) => {
-        const { audioContext, masterGain, isMuted } = get();
+        const { audioContext, masterGain, masterVolume, isMuted } = get();
+
         if (audioContext && masterGain) {
             if (isMuted) {
+                set({ isMuted: false }, false, 'unmuteAudio');
+                audioContext.resume();
                 masterGain.gain.linearRampToValueAtTime(0, audioContext.currentTime);
-                masterGain.gain.linearRampToValueAtTime(1, audioContext.currentTime + fadeDuration);
+                masterGain.gain.linearRampToValueAtTime(masterVolume, audioContext.currentTime + fadeDuration);
             } else {
-                masterGain.gain.linearRampToValueAtTime(1, audioContext.currentTime);
+                masterGain.gain.linearRampToValueAtTime(masterVolume, audioContext.currentTime);
                 masterGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + fadeDuration);
             }
 
             await new Promise(resolve => setTimeout(resolve, fadeDuration * 1000));
+            audioContext.suspend();
+            console.warn('Audio muted');
 
-            if (masterGain.gain.value === 0) {
-                set({ isMuted: true }, false, 'muteAudio');
-                audioContext.suspend();
-                console.warn('Audio muted');
-                return
-            }
-
-            if (masterGain.gain.value > 0) {
-                set({ isMuted: false }, false, 'unmuteAudio');
-                audioContext.resume();
-                console.warn('Audio unmuted');
-                return
-            }
         } else {
             console.warn('No audio context or master gain found');
         }
     },
     cleanup: () => {
-        const { audioContext } = get();
+        const { audioContext, sounds } = get();
         console.log('Cleaning up audio context', audioContext);
+
+        Object.keys(sounds).forEach(key => {
+            const sound = sounds[key];
+            if (sound.source) {
+                sound.source.disconnect();
+            }
+            if (sound.gainNode) {
+                sound.gainNode.disconnect();
+            }
+            if (sound.panner) {
+                sound.panner.disconnect();
+            }
+        });
+
         audioContext!.close();
     }
 });

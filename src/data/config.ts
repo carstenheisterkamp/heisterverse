@@ -50,7 +50,7 @@ const audiosettings = {
             "file": "spriteSoundFx.mp3",
             "positional": false,
             "loop": false,
-            "volume": 1.0,
+            "volume": 0.5,
             "start": 0.0,
             "length": 1.0
         }
