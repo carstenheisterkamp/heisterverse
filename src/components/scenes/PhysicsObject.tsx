@@ -11,28 +11,23 @@ interface PhysicsObjectProps {
     onClick?: () => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PhysicsObject: React.FC<PhysicsObjectProps> = ({ name, position, rotation, size }) => {
     const meshRef = useRef<Mesh>(null)
     const rigidBodyRef = useRef<RapierRigidBody>(null)
-    const { isMuted, startSound } = useAudioStore();
+    const { startSound, setPan } = useAudioStore();
 
     const handleClick = () => {
-        console.log(name, " clicked")
-        console.log(meshRef);
-        console.log(rigidBodyRef);
-        // onClick!();
-        console.log("isMuted? ", isMuted);
+        startSound("sndBeacon", false);
+        setPan("sndBeacon", -0.9);
     }
 
     const handleCollision = () => {
-        console.log("Collision")
-        
-        startSound("sndBeacon", false, false);
     }
 
     const handleContactForce = () => {
+    }
 
+    const handleHover = () => {
     }
 
     return (
@@ -49,7 +44,7 @@ const PhysicsObject: React.FC<PhysicsObjectProps> = ({ name, position, rotation,
                 position={position}
                 rotation={rotation}
                 onClick={handleClick}
-                onPointerEnter={() => console.log("Pointer enter")}
+                onPointerEnter={handleHover}
                 ref={meshRef}
                 receiveShadow
                 castShadow

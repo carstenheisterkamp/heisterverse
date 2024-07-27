@@ -16,7 +16,7 @@ const audiosettings = {
     {
         "track_athmo": {
             "file": "trackAthmo.mp3",
-            "type": "visualizer",
+            "positional": true,
             "loop": true,
             "volume": 0.5,
             "start": 0.0,
@@ -24,7 +24,7 @@ const audiosettings = {
         },
         "track_base": {
             "file": "trackBase.mp3",
-            "type": "visualizer",
+            "positional": true,
             "loop": true,
             "volume": 0.5,
             "start": 0.0,
@@ -32,7 +32,7 @@ const audiosettings = {
         },
         "track_mid": {
             "file": "trackMid.mp3",
-            "type": "visualizer",
+            "positional": true,
             "loop": true,
             "volume": 0.5,
             "start": 13.0,
@@ -40,7 +40,7 @@ const audiosettings = {
         },
         "track_high": {
             "file": "trackHigh.mp3",
-            "type": "visualizer",
+            "positional": true,
             "loop": true,
             "volume": 0.5,
             "start": 26.0,
@@ -48,11 +48,11 @@ const audiosettings = {
         },
         "sndBeacon": {
             "file": "spriteSoundFx.mp3",
-            "type": "ui",
-            "loop": true,
-            "volume": 0.5,
-            "start": 2.0,
-            "length": 0.5
+            "positional": false,
+            "loop": false,
+            "volume": 1.0,
+            "start": 0.0,
+            "length": 1.0
         }
     }
 }
